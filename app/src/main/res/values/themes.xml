@@ -1,0 +1,24 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.DowiezplChat" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/background_darker</item>
+        <item name="colorPrimaryVariant">@color/background_lighter</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <item name="colorSecondary">@color/background_lighter</item>
+        <item name="colorSecondaryVariant">@color/background_even_darker</item>
+        <item name="colorOnSecondary">@color/dark_brown</item>
+
+        <item name="conversationIconColor">@color/background_juicy</item>
+        <item name="conversationTextColor">@color/black</item>
+
+        <item name="messageBackgroundColor">@color/white</item>
+        <item name="messageTextColor">@color/black</item>
+        <item name="messageSenderTextColor">@color/background_juicy</item>
+
+        <item name="messageToolColor">@color/background_juicy</item>
+
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

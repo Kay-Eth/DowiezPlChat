@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Dowiez.pl Chat</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="login_welcome">DOWIEZ.PL</string>
+    <string name="login_welcome_desc">Testowy czat dla użytkowników</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Hasło</string>
+    <string name="login_button">Zaloguj się</string>
+    <string name="login_forget_password">Nie pamiętam hasła</string>
+    <string name="login_register_info">Jeszcze nie masz konta? Zarejestruj się</string>
+    <string name="login_register">Rejestracja</string>
+
+    <string name="conversations_title">Wiadomości</string>
+
+    <string name="chat_message">Napisz wiadomość</string>
+
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="conversationIconColor" format="reference" />
+    <attr name="conversationTextColor" format="reference" />
+
+    <attr name="messageToolColor" format="reference" />
+
+    <attr name="messageBackgroundColor" format="reference" />
+    <attr name="messageTextColor" format="reference" />
+    <attr name="messageSenderTextColor" format="reference" />
+</resources>

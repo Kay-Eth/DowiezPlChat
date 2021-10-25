@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    tools:context=".fragments.login.LoginFragment">
+
+    <TextView
+        android:id="@+id/welcomeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/robotot_condensed_regular"
+        android:text="@string/login_welcome"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white"
+        android:textSize="60sp"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/welcomeDescTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margins"
+        android:layout_marginEnd="@dimen/default_margins"
+        android:text="@string/login_welcome_desc"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeTV" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="378dp"
+        android:background="@drawable/round_outline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/loginEmailET"
+        style="@style/DowiezPlLogin.EditText.Style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/round_radius"
+        android:layout_marginTop="@dimen/round_radius"
+        android:layout_marginEnd="@dimen/round_radius"
+        android:drawableStart="@drawable/ic_mail"
+        android:ems="10"
+        android:hint="@string/login_email"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+    <EditText
+        android:id="@+id/loginPasswordET"
+        style="@style/DowiezPlLogin.EditText.Style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/round_radius"
+        android:layout_marginTop="@dimen/default_margins"
+        android:layout_marginEnd="@dimen/round_radius"
+        android:drawableStart="@drawable/ic_password"
+        android:ems="10"
+        android:hint="@string/login_password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginEmailET" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/loginBT"
+        style="@style/DowiezPlLogin.Button.Login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/round_radius"
+        android:layout_marginTop="@dimen/default_margins"
+        android:layout_marginEnd="@dimen/round_radius"
+        android:background="@drawable/login_button"
+        android:fontFamily="@font/open_sans"
+        android:text="@string/login_button"
+        android:textSize="18sp"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginPasswordET" />
+
+    <TextView
+        android:id="@+id/forgotPasswordTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/round_radius"
+        android:fontFamily="@font/open_sans"
+        android:text="@string/login_forget_password"
+        android:textColor="?attr/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginBT" />
+
+    <TextView
+        android:id="@+id/registerInfoTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/round_radius"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="@dimen/round_radius"
+        android:fontFamily="@font/open_sans"
+        android:text="@string/login_register_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginBT" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/registerBT"
+        style="@style/DowiezPlLogin.Button.Register"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/round_radius"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="@dimen/round_radius"
+        android:background="@drawable/register_button"
+        android:fontFamily="@font/open_sans"
+        android:text="@string/login_register"
+        android:textSize="18sp"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginBT" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
