@@ -105,7 +105,7 @@ class ChatFragment : Fragment(), IChatServiceListener {
                 }
             }
         }
-        
+
         if (viewModel.allMessages.value != null) {
             val lastId = viewModel.allMessages.value!!.last().messageId
             Log.i("ChatFragment", "Getting messages after $lastId")
