@@ -13,6 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DowiezplChat">
 
+        <service android:name=".service.ChatService" />
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"

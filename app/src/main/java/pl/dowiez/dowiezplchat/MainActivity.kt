@@ -1,8 +1,14 @@
 package pl.dowiez.dowiezplchat
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -12,6 +18,7 @@ import pl.dowiez.dowiezplchat.fragments.login.LoginFragment
 import pl.dowiez.dowiezplchat.databinding.ActivityMainBinding
 import pl.dowiez.dowiezplchat.fragments.conversations.ConversationFragment
 import pl.dowiez.dowiezplchat.helpers.user.UserHelper
+import pl.dowiez.dowiezplchat.service.ChatService
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -20,33 +27,32 @@ class MainActivity : AppCompatActivity() {
 
         const val REQUEST_CODE_INTERNET = 1
 
-//        private var chatService: ChatService? = null
-//        private var serviceBound: Boolean = false
-//        private lateinit var databaseInstance: ChatDatabase
-//
-//        fun getService() : ChatService? {
-//            return chatService
-//        }
-//
-//        fun isServiceBound() : Boolean {
-//            return serviceBound
-//        }
+        private var chatService: ChatService? = null
+        private var serviceBound: Boolean = false
+
+        fun getService() : ChatService? {
+            return chatService
+        }
+
+        fun isServiceBound() : Boolean {
+            return serviceBound
+        }
     }
 
-//    private val connection = object : ServiceConnection {
-//        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-//            val binder = service as ChatService.ChatBinder
-//            chatService = binder.getService()
-//            serviceBound = true
-//            Log.i("MainActivity", "Service Connected")
-//        }
-//
-//        override fun onServiceDisconnected(name: ComponentName?) {
-//            chatService = null
-//            serviceBound = false
-//            Log.i("MainActivity", "Service Disconnected")
-//        }
-//    }
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as ChatService.ChatBinder
+            chatService = binder.getService()
+            serviceBound = true
+            Log.i("MainActivity", "Service Connected")
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            chatService = null
+            serviceBound = false
+            Log.i("MainActivity", "Service Disconnected")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,27 +70,27 @@ class MainActivity : AppCompatActivity() {
         else
             loadFragment(ConversationFragment())
 
-//        ChatDatabase.initDatabase(this)
-//        databaseInstance = ChatDatabase.INSTANCE!!
+        if (chatService == null) {
+            Log.i("MainActivity", "Bound service")
+            Intent(this, ChatService::class.java).also { intent ->
+                bindService(intent, connection, Context.BIND_AUTO_CREATE)
+            }
 
-//        if (chatService == null) {
-//            Log.i("MainActivity", "Bound service")
-//            Intent(this, ChatService::class.java).also { intent ->
-//                bindService(intent, connection, Context.BIND_AUTO_CREATE)
-//            }
-//        }
+            val intent = Intent(this, ChatService::class.java)
+            startService(intent)
+        }
 
-//        Intent(this, ChatService::class.java).also { intent ->
-//            bindService(intent, connection, Context.BIND_AUTO_CREATE)
-//        }
+        Intent(this, ChatService::class.java).also { intent ->
+            bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.i("MainActivity", "onCreate")
-//
-//        unbindService(connection)
-//        serviceBound = false
+
+        unbindService(connection)
+        serviceBound = false
     }
 
     fun loadFragment(fragment: Fragment) {

@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.VolleyError
 import kotlinx.android.synthetic.main.fragment_chat.*
 import pl.dowiez.dowiezplchat.App
+import pl.dowiez.dowiezplchat.MainActivity
 import pl.dowiez.dowiezplchat.R
 import pl.dowiez.dowiezplchat.data.ChatDatabase
 import pl.dowiez.dowiezplchat.data.ChatRepository
@@ -20,8 +22,10 @@ import pl.dowiez.dowiezplchat.data.entities.Message
 import pl.dowiez.dowiezplchat.databinding.FragmentChatBinding
 import pl.dowiez.dowiezplchat.helpers.api.ApiHelper
 import pl.dowiez.dowiezplchat.helpers.api.IMessagesCallback
+import pl.dowiez.dowiezplchat.service.ChatService
+import pl.dowiez.dowiezplchat.service.IChatServiceListener
 
-class ChatFragment : Fragment() {
+class ChatFragment : Fragment(), IChatServiceListener {
     companion object {
         const val ARG_CONVERSATION_ID = "conversationId"
 
@@ -73,11 +77,19 @@ class ChatFragment : Fragment() {
         chatTB.inflateMenu(R.menu.chat_menu)
 
         ChatAdapter.context = requireContext()
-        val adapter = ChatAdapter()
-        messagesList.adapter = adapter
         messagesList.layoutManager = LinearLayoutManager(requireContext()).apply {
             stackFromEnd = true
         }
+
+        val adapter = ChatAdapter().apply {
+            registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                    messagesList.scrollToPosition(positionStart)
+                }
+            })
+        }
+        messagesList.adapter = adapter
+
         messagesList.apply {
             setHasFixedSize(true)
         }
@@ -93,11 +105,7 @@ class ChatFragment : Fragment() {
                 }
             }
         }
-
-        viewModel.allMessages.observe(viewLifecycleOwner) {
-            it.let { adapter.submitList(it) }
-        }
-
+        
         if (viewModel.allMessages.value != null) {
             val lastId = viewModel.allMessages.value!!.last().messageId
             Log.i("ChatFragment", "Getting messages after $lastId")
@@ -106,6 +114,8 @@ class ChatFragment : Fragment() {
                     messages.forEach {
                         ChatDatabase.instance!!.messageDao().insert(it)
                     }
+
+                    ChatService.setChatServiceListener(this@ChatFragment)
                 }
 
                 override fun onError(error: VolleyError) {
@@ -126,5 +136,27 @@ class ChatFragment : Fragment() {
                 }
             })
         }
+
+        viewModel.allMessages.observe(viewLifecycleOwner) {
+            it.let { adapter.submitList(it) }
+        }
+
+        sendIV.setOnClickListener { this@ChatFragment.onSendPressed() }
+    }
+
+    override fun onDestroyView() {
+        ChatService.setChatServiceListener(null)
+        super.onDestroyView()
+    }
+
+    private fun onSendPressed() {
+        val message = newMessageTV.text.toString()
+        newMessageTV.setText("")
+        if (message.isNotEmpty())
+            MainActivity.getService()?.sendMessage(conversationId, message)
+    }
+
+    override fun onMessageReceived(message: Message) {
+        viewModel.insert(message)
     }
 }

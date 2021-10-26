@@ -19,6 +19,7 @@ object ApiHelper {
 
     private const val ACCOUNTS_LOGIN_ENDPOINT: String = "accounts/login"
     private const val ACCOUNTS_MY_ENDPOINT: String = "accounts/my"
+    private const val ACCOUNT_GET_SMALL_ENDPOINT: String = "accounts/<ACCID>/small"
 
     private const val CONVERSATIONS_MY_ENDPOINT: String = "conversations/my"
     private const val CONVERSATIONS_DETAILS_ENDPOINT: String = "conversations/"
@@ -90,6 +91,34 @@ object ApiHelper {
                 UserHelper.lastName = lastName
 
                 callback.onSuccess()
+            }
+        ) { error ->
+            error.message?.let { Log.e("ApiHelper", it) }
+
+            callback.onError(error)
+        }
+
+        RequestsSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest)
+    }
+
+    fun getAccountInfo(context: Context, accountId: String, callback: IGetAccountInfoCallback) {
+        val url = API_BASE_URL + ACCOUNT_GET_SMALL_ENDPOINT.replace("<ACCID>", accountId)
+
+        val jsonObjectRequest = AuthorizedJsonObjectRequest(
+            Request.Method.GET,
+            url,
+            null,
+            { response ->
+                val accountId = response["accountId"].toString()
+                val email = response["email"].toString()
+                val firstName = response["firstName"].toString()
+                val lastName = response["lastName"].toString()
+
+                callback.onSuccess(
+                    Account(
+                        accountId, email, firstName, lastName
+                    )
+                )
             }
         ) { error ->
             error.message?.let { Log.e("ApiHelper", it) }

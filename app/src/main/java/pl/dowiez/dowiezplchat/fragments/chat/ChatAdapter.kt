@@ -87,8 +87,6 @@ class ChatAdapter : ListAdapter<Message, ChatAdapter.MessageViewHolder>(Messages
     }
 
     override fun getItemViewType(position: Int): Int {
-        Log.i("GetItemViewType", "Checking ${getItem(position).senderId} =?= ${UserHelper.accountId}")
         return if (getItem(position).senderId == UserHelper.accountId) 1 else 0
     }
-
 }

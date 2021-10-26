@@ -126,6 +126,8 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
 
                     })
                 }
+
+                MainActivity.getService()?.startHubConnection()
             }
 
             override fun onError(error: VolleyError) {
