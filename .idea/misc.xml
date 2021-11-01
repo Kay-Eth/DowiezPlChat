@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/DEV/DowiezPlNowyChat/app/src/main/res/layout/message_left_entry.xml" value="0.23369565217391305" />
+        <entry key="..\:/DEV/DowiezPlNowyChat/app/src/main/res/layout/message_right_entry.xml" value="0.588495575221239" />
         <entry key="..\:/DowiezPl_Chat/app/src/main/res/layout/activity_main.xml" value="0.3625" />
         <entry key="..\:/DowiezPl_Chat/app/src/main/res/layout/conversation_fragment.xml" value="0.3625" />
         <entry key="..\:/DowiezPl_Chat/app/src/main/res/layout/fragment_chat.xml" value="0.3625" />
