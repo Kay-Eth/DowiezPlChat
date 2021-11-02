@@ -36,11 +36,6 @@ object ApiHelper {
 
     fun login(context: Context, email: String, password: String, callback: ILoginCallback) {
         val url = API_BASE_URL + ACCOUNTS_LOGIN_ENDPOINT
-
-        val data = HashMap<String, String>()
-        data["email"] = email
-        data["password"] = password
-
         var token = ""
 
         val jsonObjectRequest = JsonObjectRequest(
