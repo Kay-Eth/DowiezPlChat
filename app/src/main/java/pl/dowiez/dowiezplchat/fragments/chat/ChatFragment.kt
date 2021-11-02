@@ -7,11 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.ColorInt
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.VolleyError
+import com.microsoft.signalr.HubConnectionState
 import kotlinx.android.synthetic.main.fragment_chat.*
 import pl.dowiez.dowiezplchat.App
 import pl.dowiez.dowiezplchat.MainActivity
@@ -23,9 +26,9 @@ import pl.dowiez.dowiezplchat.databinding.FragmentChatBinding
 import pl.dowiez.dowiezplchat.helpers.api.ApiHelper
 import pl.dowiez.dowiezplchat.helpers.api.IMessagesCallback
 import pl.dowiez.dowiezplchat.service.ChatService
-import pl.dowiez.dowiezplchat.service.IChatServiceListener
+import pl.dowiez.dowiezplchat.service.IChatInvokeSendCallback
 
-class ChatFragment : Fragment(), IChatServiceListener {
+class ChatFragment : Fragment() {
     companion object {
         const val ARG_CONVERSATION_ID = "conversationId"
 
@@ -88,6 +91,7 @@ class ChatFragment : Fragment(), IChatServiceListener {
                 }
             })
         }
+//        val adapter = ChatAdapter()
         messagesList.adapter = adapter
 
         messagesList.apply {
@@ -114,8 +118,6 @@ class ChatFragment : Fragment(), IChatServiceListener {
                     messages.forEach {
                         ChatDatabase.instance!!.messageDao().insert(it)
                     }
-
-                    ChatService.setChatServiceListener(this@ChatFragment)
                 }
 
                 override fun onError(error: VolleyError) {
@@ -139,24 +141,61 @@ class ChatFragment : Fragment(), IChatServiceListener {
 
         viewModel.allMessages.observe(viewLifecycleOwner) {
             it.let { adapter.submitList(it) }
+            messagesList.scrollToPosition(it.size - 1)
         }
 
         sendIV.setOnClickListener { this@ChatFragment.onSendPressed() }
     }
 
     override fun onDestroyView() {
-        ChatService.setChatServiceListener(null)
         super.onDestroyView()
     }
 
     private fun onSendPressed() {
-        val message = newMessageTV.text.toString()
-        newMessageTV.setText("")
-        if (message.isNotEmpty())
-            MainActivity.getService()?.sendMessage(conversationId, message)
-    }
+        if (ChatService.getState() != HubConnectionState.CONNECTED) {
+            Toast.makeText(requireContext(), "Not connected to server", Toast.LENGTH_LONG).show()
+            return
+        }
 
-    override fun onMessageReceived(message: Message) {
-        viewModel.insert(message)
+        val message = newMessageTV.text.toString()
+        newMessageTV.isFocusable = false
+        sendIV.isClickable = false
+        sendIV.isVisible = false
+
+        if (message.isNotEmpty())
+            MainActivity.getService()?.invokeSendMessage(
+                conversationId,
+                message,
+                object : IChatInvokeSendCallback {
+                    override fun onSuccess() {
+                        requireActivity().runOnUiThread {
+                            newMessageTV.setText("")
+                            newMessageTV.isFocusable = true
+                            newMessageTV.isFocusableInTouchMode = true
+                            sendIV.isClickable = true
+                            sendIV.isVisible = true
+                        }
+
+                        Log.i("Chat Fragment", "Complete")
+                    }
+
+                    override fun onError(e: Throwable) {
+                        requireActivity().runOnUiThread {
+                            newMessageTV.setText("")
+                            newMessageTV.isFocusable = true
+                            newMessageTV.isFocusableInTouchMode = true
+                            sendIV.isClickable = true
+                            sendIV.isVisible = true
+
+                            Toast.makeText(requireContext(), "Failed to send a message", Toast.LENGTH_LONG).show()
+                        }
+
+                        Log.e("ChatFragment", "------------------")
+                        Log.e("ChatFragment", e.toString())
+                        e.message?.let { Log.e("ChatFragment", it) }
+                        e.printStackTrace()
+                    }
+                }
+            )
     }
 }

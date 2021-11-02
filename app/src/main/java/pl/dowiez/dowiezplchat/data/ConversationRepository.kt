@@ -9,6 +9,7 @@ import pl.dowiez.dowiezplchat.data.daos.ConversationDao
 import pl.dowiez.dowiezplchat.data.daos.MessageDao
 import pl.dowiez.dowiezplchat.data.entities.Conversation
 import pl.dowiez.dowiezplchat.data.entities.ConversationWithAccounts
+import pl.dowiez.dowiezplchat.data.entities.Message
 
 class ConversationRepository(private val conversationDao: ConversationDao) {
     private var allConversations: Flow<List<Conversation>> = conversationDao.getAll()

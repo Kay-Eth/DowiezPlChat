@@ -16,12 +16,15 @@ interface ConversationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCross(conversationAccountCrossRef: ConversationAccountCrossRef)
 
-    @Query("SELECT * FROM Conversation")
+    @Query("SELECT * FROM Conversation ORDER BY lastMessageDate DESC")
     fun getAll(): Flow<List<Conversation>>
 
     @Transaction
     @Query("SELECT * FROM Conversation WHERE conversationId = :conversationId")
     fun get(conversationId: String): Flow<ConversationWithAccounts>
+
+    @Query("SELECT * FROM Conversation WHERE conversationId = :conversationId")
+    fun getSingle(conversationId: String): Conversation
 
     @Delete
     fun delete(conversation: Conversation)

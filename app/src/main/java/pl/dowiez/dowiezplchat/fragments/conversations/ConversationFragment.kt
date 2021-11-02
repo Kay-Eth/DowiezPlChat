@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.VolleyError
@@ -126,15 +127,16 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
 
                     })
                 }
-
-                MainActivity.getService()?.startHubConnection()
             }
 
             override fun onError(error: VolleyError) {
                 Log.e("ConversationFragment", "Failed to get my conversations")
+                Toast.makeText(requireActivity(), "Failed to connect to server", Toast.LENGTH_LONG).show()
             }
-
         })
+
+        Log.i("ConversationFragment", "StartHubConnection")
+        MainActivity.getService()?.startHubConnection()
 
         ConversationAdapter.context = requireContext()
         val adapter = ConversationAdapter(this)

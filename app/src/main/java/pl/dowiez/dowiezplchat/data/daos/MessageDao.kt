@@ -17,4 +17,8 @@ interface MessageDao {
     @Transaction
     @Query("SELECT * FROM Message WHERE conversationId = :conversationId ORDER BY sendDate ASC")
     fun getFromConv(conversationId: String): Flow<List<Message>>
+
+    @Transaction
+    @Query("SELECT * FROM Message ORDER BY sendDate ASC")
+    fun getAll(): Flow<List<Message>>
 }

@@ -45,6 +45,11 @@ class MainActivity : AppCompatActivity() {
             chatService = binder.getService()
             serviceBound = true
             Log.i("MainActivity", "Service Connected")
+
+            if (UserHelper.token.isEmpty())
+                loadFragment(LoginFragment())
+            else
+                loadFragment(ConversationFragment())
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -64,11 +69,6 @@ class MainActivity : AppCompatActivity() {
         checkPermissions()
 
         UserHelper.readToken(this)
-
-        if (UserHelper.token.isEmpty())
-            loadFragment(LoginFragment())
-        else
-            loadFragment(ConversationFragment())
 
         if (chatService == null) {
             Log.i("MainActivity", "Bound service")

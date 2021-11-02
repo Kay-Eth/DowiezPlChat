@@ -90,6 +90,8 @@ object ApiHelper {
                 UserHelper.firstName = firstName
                 UserHelper.lastName = lastName
 
+                UserHelper.saveId(context)
+
                 callback.onSuccess()
             }
         ) { error ->
