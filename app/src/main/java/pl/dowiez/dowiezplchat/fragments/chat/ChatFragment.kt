@@ -75,7 +75,7 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val typedValue = TypedValue()
         val theme = requireContext().theme
-        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+        theme.resolveAttribute(R.attr.chatStatusBarColor, typedValue, true)
         @ColorInt val color = typedValue.data
         requireActivity().window.statusBarColor = color
         binding = FragmentChatBinding.bind(view)
@@ -159,6 +159,11 @@ class ChatFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        val typedValue = TypedValue()
+        val theme = requireContext().theme
+        theme.resolveAttribute(R.attr.statusBarColor, typedValue, true)
+        @ColorInt val color = typedValue.data
+        requireActivity().window.statusBarColor = color
     }
 
     private fun onSendPressed() {

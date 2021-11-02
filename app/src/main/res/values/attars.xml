@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="statusBarColor" format="reference" />
+    <attr name="chatStatusBarColor" format="reference" />
+
     <attr name="conversationIconColor" format="reference" />
     <attr name="conversationTextColor" format="reference" />
 

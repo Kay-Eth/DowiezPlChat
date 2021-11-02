@@ -57,7 +57,7 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
         super.onViewCreated(view, savedInstanceState)
         val typedValue = TypedValue()
         val theme = requireContext().theme
-        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+        theme.resolveAttribute(R.attr.statusBarColor, typedValue, true)
         @ColorInt val color = typedValue.data
         requireActivity().window.statusBarColor = color
         binding = ConversationFragmentBinding.bind(view)

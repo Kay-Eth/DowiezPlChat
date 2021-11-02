@@ -14,6 +14,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="background_juicy">#FF8743</color>
+    <color name="background_juicy_dark">#A3562B</color>
     <color name="background_darker">#FF995F</color>
     <color name="background_even_darker">#B36B42</color>
     <color name="background_lighter">#FFECE1</color>

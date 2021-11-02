@@ -18,7 +18,9 @@
 
         <item name="messageToolColor">@color/background_even_darker</item>
 
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="statusBarColor" tools:targetApi="l">@color/black</item>
+        <item name="chatStatusBarColor" tools:targetApi="1">@color/background_juicy_dark</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/black</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
