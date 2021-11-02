@@ -1,10 +1,18 @@
 package pl.dowiez.dowiezplchat.service
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.android.volley.VolleyError
 import com.microsoft.signalr.HubConnection
 import com.microsoft.signalr.HubConnectionBuilder
@@ -16,6 +24,8 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
+import pl.dowiez.dowiezplchat.MainActivity
+import pl.dowiez.dowiezplchat.R
 import pl.dowiez.dowiezplchat.data.ChatDatabase
 import pl.dowiez.dowiezplchat.data.entities.Account
 import pl.dowiez.dowiezplchat.data.entities.Conversation
@@ -29,6 +39,8 @@ import java.util.*
 
 class ChatService : Service() {
     companion object {
+        private const val CHANNEL_ID: String = "DowiezPlChatServiceChannel"
+
         private const val CHAT_ENDPOINT: String = "https://dowiez.pl:5001/hubs/chat"
 
         private var hubConnection: HubConnection? = null
@@ -50,6 +62,7 @@ class ChatService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        createNotificationChannel()
         Log.i("Service", "Service onCreate")
     }
 
@@ -68,8 +81,8 @@ class ChatService : Service() {
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        hubConnection?.stop()
-        hubConnection = null
+//        hubConnection?.stop()
+//        hubConnection = null
         return super.onUnbind(intent)
     }
 
@@ -128,6 +141,18 @@ class ChatService : Service() {
         val mess = Message(messageId, message, dateFormat.parse(sentDate), conversationId, senderId)
         ChatDatabase.instance!!.messageDao().insert(mess)
         ChatDatabase.instance!!.conversationDao().getSingle(conversationId).also {
+            if (senderId != UserHelper.accountId) {
+                if (MainActivity.isActivityVisible())
+                {
+                    if (MainActivity.getConversationId() != conversationId)
+                        it.name?.let { it1 -> createNotification(conversationId, it1, message) }
+                }
+                else
+                {
+                    it.name?.let { it1 -> createNotification(conversationId, it1, message) }
+                }
+            }
+
             ChatDatabase.instance!!.conversationDao().insert(
                 Conversation(
                     it.conversationId,
@@ -175,5 +200,42 @@ class ChatService : Service() {
                     callback.onError(e)
                 }
             })
+    }
+
+    private fun createNotification(conversationId: String, title: String, text: String) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra(MainActivity.INTENT_CONVERSATION_ID_KEY, conversationId)
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_message)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(conversationId, 0, builder.build())
+        }
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

@@ -54,6 +54,16 @@ class ChatFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        MainActivity.setConversationId(conversationId)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        MainActivity.setConversationId(null)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

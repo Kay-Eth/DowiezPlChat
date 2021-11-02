@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import pl.dowiez.dowiezplchat.fragments.login.LoginFragment
 import pl.dowiez.dowiezplchat.databinding.ActivityMainBinding
+import pl.dowiez.dowiezplchat.fragments.chat.ChatFragment
 import pl.dowiez.dowiezplchat.fragments.conversations.ConversationFragment
 import pl.dowiez.dowiezplchat.helpers.user.UserHelper
 import pl.dowiez.dowiezplchat.service.ChatService
@@ -30,12 +31,28 @@ class MainActivity : AppCompatActivity() {
         private var chatService: ChatService? = null
         private var serviceBound: Boolean = false
 
+        const val INTENT_CONVERSATION_ID_KEY = "ConversationId"
+
         fun getService() : ChatService? {
             return chatService
         }
 
         fun isServiceBound() : Boolean {
             return serviceBound
+        }
+
+        private var activityVisible = false
+        fun isActivityVisible(): Boolean {
+            return activityVisible
+        }
+
+        private var conversationId: String? = null
+        fun getConversationId(): String? {
+            return conversationId
+        }
+
+        fun setConversationId(convId: String?) {
+            conversationId = convId
         }
     }
 
@@ -49,7 +66,15 @@ class MainActivity : AppCompatActivity() {
             if (UserHelper.token.isEmpty())
                 loadFragment(LoginFragment())
             else
-                loadFragment(ConversationFragment())
+            {
+                val con = intent.getStringExtra(INTENT_CONVERSATION_ID_KEY)
+                if (con != null) {
+                    loadFragment(ChatFragment.newInstance(con))
+                } else {
+                    loadFragment(ConversationFragment())
+                }
+            }
+
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -143,5 +168,15 @@ class MainActivity : AppCompatActivity() {
         } else {
             supportFragmentManager.popBackStack()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activityVisible = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activityVisible = true
     }
 }
