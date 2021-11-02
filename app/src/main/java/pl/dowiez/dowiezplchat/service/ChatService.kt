@@ -3,7 +3,6 @@ package pl.dowiez.dowiezplchat.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -21,9 +20,6 @@ import io.reactivex.CompletableObserver
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.runBlocking
 import pl.dowiez.dowiezplchat.MainActivity
 import pl.dowiez.dowiezplchat.R
 import pl.dowiez.dowiezplchat.data.ChatDatabase
@@ -112,6 +108,12 @@ class ChatService : Service() {
             String::class.java
         )
 
+        hubConnection!!.on(
+            "GrounLeave", { conversationId, accountId -> groupLeave(conversationId, accountId) },
+            String::class.java,
+            String::class.java
+        )
+
         hubConnection!!.onClosed {
             Log.e("ChatService", "Closed. Reconnecting...")
             startConnection()
@@ -177,6 +179,11 @@ class ChatService : Service() {
                 Log.e("ChatService", "Failed to get account info")
             }
         })
+    }
+
+    private fun groupLeave(conversationId: String, accountId: String) {
+        Log.i("ChatService", "Account leaving: $conversationId, $accountId")
+        ChatDatabase.instance!!.conversationDao().removeCross(conversationId, accountId)
     }
 
     fun invokeSendMessage(conversationId: String, message: String, callback: IChatInvokeSendCallback) {

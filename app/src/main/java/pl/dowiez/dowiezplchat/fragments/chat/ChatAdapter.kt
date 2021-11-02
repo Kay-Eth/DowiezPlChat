@@ -67,9 +67,10 @@ class ChatAdapter : ListAdapter<Message, ChatAdapter.MessageViewHolder>(Messages
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val message: Message = getItem(position)
         holder.message = message
-        val account = accounts.find { it.accountId == message.senderId }!!
+        val account = accounts.find { it.accountId == message.senderId }
 
-        holder.messageSenderTV?.text = "${account.firstName} ${account.lastName}"
+        if (account != null)
+            holder.messageSenderTV?.text = "${account.firstName} ${account.lastName}"
         holder.messageContentTV.text = message.content
 
         val calNow = Calendar.getInstance()

@@ -78,7 +78,9 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
 
         ApiHelper.getMyConversations(requireContext(), object : IMyConversationsCallback {
             override fun onSuccess(conversations: ArrayList<Conversation>) {
-                conversations.forEach {
+                val conversationsInRoom = ChatDatabase.instance!!.conversationDao().getAllSlow().toMutableList()
+
+                conversations.forEach { it ->
                     ApiHelper.getConversationDetail(requireContext(), it.conversationId, object : IConversationDetailCallback {
                         override fun onSuccess(
                             conversationId: String,
@@ -90,6 +92,12 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
                             chatMembers: ArrayList<Account>
                         ) {
                             Log.i("ConversationFragment", conversationId)
+
+                            val removeConv = conversationsInRoom.find { convFind ->
+                                convFind.conversationId == conversationId
+                            }
+                            if (removeConv != null)
+                                conversationsInRoom.remove(removeConv)
 
                             ChatDatabase.instance!!.conversationDao().insert(
                                 Conversation(
@@ -108,9 +116,17 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
                                 )
                             )
 
+                            val accountsInRoom = ChatDatabase.instance!!.conversationDao().getSlow(conversationId).accounts.toMutableList()
+
                             chatMembers.forEach { account ->
                                 Log.i("ConversationFragment", "Insert ${account.accountId}")
                                 ChatDatabase.instance!!.accountDao().insert(account)
+
+                                val removeAcc = accountsInRoom.find { findAcc ->
+                                    findAcc.accountId == account.accountId
+                                }
+                                if (removeAcc != null)
+                                    accountsInRoom.remove(removeAcc)
 
                                 ChatDatabase.instance!!.conversationDao().insertCross(
                                     ConversationAccountCrossRef(
@@ -119,13 +135,20 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
                                     )
                                 )
                             }
+
+                            accountsInRoom.forEach { accRem ->
+                                ChatDatabase.instance!!.conversationDao().removeCross(conversationId, accRem.accountId)
+                            }
                         }
 
                         override fun onError(error: VolleyError) {
                             Log.e("ConversationFragment", "Failed to get conversation's small detail")
                         }
-
                     })
+                }
+
+                conversationsInRoom.forEach {
+                    ChatDatabase.instance!!.conversationDao().remove(it)
                 }
             }
 
