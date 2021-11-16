@@ -12,11 +12,14 @@ import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.room.Database
+import com.android.volley.VolleyError
 import pl.dowiez.dowiezplchat.R
 import pl.dowiez.dowiezplchat.data.ChatDatabase
 import pl.dowiez.dowiezplchat.data.daos.AccountDao
 import pl.dowiez.dowiezplchat.data.entities.Account
 import pl.dowiez.dowiezplchat.data.entities.Message
+import pl.dowiez.dowiezplchat.helpers.api.ApiHelper
+import pl.dowiez.dowiezplchat.helpers.api.IGetAccountInfoCallback
 import pl.dowiez.dowiezplchat.helpers.user.UserHelper
 
 import java.text.SimpleDateFormat
@@ -71,6 +74,16 @@ class ChatAdapter : ListAdapter<Message, ChatAdapter.MessageViewHolder>(Messages
 
         if (account != null)
             holder.messageSenderTV?.text = "${account.firstName} ${account.lastName}"
+        else
+            ApiHelper.getAccountInfo(context, message.senderId, object : IGetAccountInfoCallback {
+                override fun onSuccess(account: Account) {
+                    ChatDatabase.instance!!.accountDao().insert(account)
+                }
+
+                override fun onError(error: VolleyError) {
+                    Log.e("ChatAdapter", error.toString())
+                }
+            })
         holder.messageContentTV.text = message.content
 
         val calNow = Calendar.getInstance()
