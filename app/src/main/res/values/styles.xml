@@ -24,4 +24,9 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">@color/white</item>
     </style>
+
+    <style name="DowiezPlLogoutAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:background">?attr/colorOnPrimary</item>
+        <item name="android:textColor">@color/background_juicy</item>
+    </style>
 </resources>

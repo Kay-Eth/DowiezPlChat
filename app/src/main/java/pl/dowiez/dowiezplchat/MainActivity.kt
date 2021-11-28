@@ -14,10 +14,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.android.volley.VolleyError
 import pl.dowiez.dowiezplchat.fragments.login.LoginFragment
 import pl.dowiez.dowiezplchat.databinding.ActivityMainBinding
 import pl.dowiez.dowiezplchat.fragments.chat.ChatFragment
 import pl.dowiez.dowiezplchat.fragments.conversations.ConversationFragment
+import pl.dowiez.dowiezplchat.helpers.api.ApiHelper
+import pl.dowiez.dowiezplchat.helpers.api.IRenewTokenCallback
 import pl.dowiez.dowiezplchat.helpers.user.UserHelper
 import pl.dowiez.dowiezplchat.service.ChatService
 
@@ -67,14 +70,24 @@ class MainActivity : AppCompatActivity() {
                 loadFragment(LoginFragment())
             else
             {
-                val con = intent.getStringExtra(INTENT_CONVERSATION_ID_KEY)
-                if (con != null) {
-                    loadFragment(ChatFragment.newInstance(con))
-                } else {
-                    loadFragment(ConversationFragment())
-                }
-            }
+                ApiHelper.renewToken(this@MainActivity, object : IRenewTokenCallback {
+                    override fun onSuccess() {
+                        Log.i("MainActivity", "Token renewed successfully")
 
+                        val con = intent.getStringExtra(INTENT_CONVERSATION_ID_KEY)
+                        if (con != null) {
+                            loadFragment(ChatFragment.newInstance(con))
+                        } else {
+                            loadFragment(ConversationFragment())
+                        }
+                    }
+
+                    override fun onError(error: VolleyError) {
+                        Log.e("MainActivity", "Token renewal failed")
+                        loadFragment(LoginFragment())
+                    }
+                })
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {

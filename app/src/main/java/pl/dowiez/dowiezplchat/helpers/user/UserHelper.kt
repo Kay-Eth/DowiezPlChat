@@ -35,7 +35,7 @@ object UserHelper {
         }
     }
 
-    fun readId(context: Context) {
+    private fun readId(context: Context) {
         val file = File(context.filesDir, ID_FILE_PATH)
         accountId = if (file.exists())
             file.readText().trim()
@@ -47,6 +47,13 @@ object UserHelper {
         context.openFileOutput(ID_FILE_PATH, Context.MODE_PRIVATE).use {
             it.write(accountId.toByteArray())
         }
+    }
+
+    fun logout(context: Context) {
+        val file = File(context.filesDir, TOKEN_FILE_PATH)
+        if (file.exists())
+            file.delete()
+        token = String()
     }
 
     fun loadAccountData(context: Context) {

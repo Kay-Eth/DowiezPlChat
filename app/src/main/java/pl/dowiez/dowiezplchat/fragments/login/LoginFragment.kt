@@ -17,6 +17,7 @@ import pl.dowiez.dowiezplchat.databinding.FragmentLoginBinding
 import pl.dowiez.dowiezplchat.fragments.conversations.ConversationFragment
 import pl.dowiez.dowiezplchat.helpers.api.ApiHelper
 import pl.dowiez.dowiezplchat.helpers.api.ILoginCallback
+import pl.dowiez.dowiezplchat.helpers.api.IRenewTokenCallback
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding

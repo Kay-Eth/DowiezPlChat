@@ -4,6 +4,10 @@
     <string name="channel_description">Dowiez.pl Chat Service channel</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="logout_ask">Na pewno chcesz się wylogować</string>
+    <string name="logout_yes">Tak</string>
+    <string name="logout_no">Nie</string>
+
     <string name="login_welcome">DOWIEZ.PL</string>
     <string name="login_welcome_desc">Testowy czat dla użytkowników</string>
     <string name="login_email">Email</string>

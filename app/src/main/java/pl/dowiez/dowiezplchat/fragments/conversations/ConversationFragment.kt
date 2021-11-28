@@ -1,5 +1,7 @@
 package pl.dowiez.dowiezplchat.fragments.conversations
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -22,10 +24,12 @@ import pl.dowiez.dowiezplchat.data.entities.Conversation
 import pl.dowiez.dowiezplchat.data.entities.ConversationAccountCrossRef
 import pl.dowiez.dowiezplchat.databinding.ConversationFragmentBinding
 import pl.dowiez.dowiezplchat.fragments.chat.ChatFragment
+import pl.dowiez.dowiezplchat.fragments.login.LoginFragment
 import pl.dowiez.dowiezplchat.helpers.api.ApiHelper
 import pl.dowiez.dowiezplchat.helpers.api.IConversationDetailCallback
 import pl.dowiez.dowiezplchat.helpers.api.IMyAccountCallback
 import pl.dowiez.dowiezplchat.helpers.api.IMyConversationsCallback
+import pl.dowiez.dowiezplchat.helpers.user.UserHelper
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -169,10 +173,33 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
         viewModel.allConversations.observe(viewLifecycleOwner) {
             it.let { adapter.submitList(it) }
         }
+
+        logoutBT.setOnClickListener { this@ConversationFragment.onLogoutClick() }
     }
 
     override fun onItemClick(conversation: Conversation) {
         Log.i("ConversationFragment", conversation.conversationId)
         (requireActivity() as MainActivity).loadFragment(ChatFragment.newInstance(conversation.conversationId))
+    }
+
+    private fun onLogoutClick() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it, R.style.DowiezPlLogoutAlertDialog);
+            builder.apply {
+                setPositiveButton(R.string.logout_yes,
+                    DialogInterface.OnClickListener { _, _ ->
+                        UserHelper.logout(requireContext())
+                        (requireActivity() as MainActivity).replaceFragment(LoginFragment())
+                })
+                setNegativeButton(R.string.logout_no,
+                    DialogInterface.OnClickListener { _, _ ->
+
+                })
+                setTitle(R.string.logout_ask)
+
+            }
+            builder.create()
+        }
+        alertDialog?.show()
     }
 }

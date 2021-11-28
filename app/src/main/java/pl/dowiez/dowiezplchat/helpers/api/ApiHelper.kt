@@ -10,6 +10,7 @@ import pl.dowiez.dowiezplchat.data.entities.Account
 import pl.dowiez.dowiezplchat.data.entities.Conversation
 import pl.dowiez.dowiezplchat.data.entities.Message
 import pl.dowiez.dowiezplchat.helpers.user.UserHelper
+import pl.dowiez.dowiezplchat.helpers.user.UserHelper.token
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -18,6 +19,7 @@ object ApiHelper {
     private const val API_BASE_URL: String = "https://dowiez.pl:5001/api/"
 
     private const val ACCOUNTS_LOGIN_ENDPOINT: String = "accounts/login"
+    private const val ACCOUNTS_RENEW_ENDPOINT: String = "accounts/renewtoken"
     private const val ACCOUNTS_MY_ENDPOINT: String = "accounts/my"
     private const val ACCOUNT_GET_SMALL_ENDPOINT: String = "accounts/<ACCID>/small"
 
@@ -42,6 +44,38 @@ object ApiHelper {
             Request.Method.POST,
             url,
             JSONObject("{ \"email\": \"${email}\", \"password\": \"${password}\" }"),
+            { response ->
+                token = response["token"].toString()
+                UserHelper.token = token
+                UserHelper.saveToken(context)
+
+                getMyAccountInfo(context, object : IMyAccountCallback {
+                    override fun onSuccess() {
+                        callback.onSuccess()
+                    }
+
+                    override fun onError(error: VolleyError) {
+                        callback.onError(error)
+                    }
+                })
+            },
+            { error ->
+                error.message?.let { Log.e("ApiHelper", it) }
+
+                callback.onError(error)
+            }
+        )
+
+        RequestsSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest)
+    }
+
+    fun renewToken(context: Context, callback: IRenewTokenCallback) {
+        val url = API_BASE_URL + ACCOUNTS_RENEW_ENDPOINT
+
+        val jsonObjectRequest = AuthorizedJsonObjectRequest(
+            Request.Method.POST,
+            url,
+            null,
             { response ->
                 token = response["token"].toString()
                 UserHelper.token = token
