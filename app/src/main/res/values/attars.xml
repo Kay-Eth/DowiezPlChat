@@ -11,4 +11,7 @@
     <attr name="messageBackgroundColor" format="reference" />
     <attr name="messageTextColor" format="reference" />
     <attr name="messageSenderTextColor" format="reference" />
+
+    <attr name="alertTitle" format="reference" />
+    <attr name="alertAnswer" format="reference" />
 </resources>
