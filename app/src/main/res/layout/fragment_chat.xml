@@ -18,7 +18,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:subtitleTextAppearance="@style/DowiezPlChat.Toolbar.SubtitleTextAppearance"
         app:subtitleTextColor="@color/white"
+        app:titleTextAppearance="@style/DowiezPlChat.Toolbar.TitleTextAppearance"
         app:titleTextColor="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView

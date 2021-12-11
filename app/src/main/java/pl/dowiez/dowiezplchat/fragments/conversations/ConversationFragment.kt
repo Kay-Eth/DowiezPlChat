@@ -196,7 +196,6 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
 
                 })
                 setTitle(R.string.logout_ask)
-
             }
             builder.create()
         }

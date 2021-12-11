@@ -25,6 +25,15 @@
         <item name="actionMenuTextColor">@color/white</item>
     </style>
 
+    <style name="DowiezPlChat.Toolbar.TitleTextAppearance">
+        <item name="android:fontFamily">@font/robotot_condensed_bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="DowiezPlChat.Toolbar.SubtitleTextAppearance">
+        <item name="android:fontFamily">@font/robotot_condensed_regular</item>
+    </style>
+
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">?attr/alertAnswer</item>
     </style>
@@ -34,6 +43,8 @@
     </style>
 
     <style name="DowiezPlLogoutAlertDialog" parent="android:Theme.Material.Dialog.Alert">
+        <item name="android:fontFamily">@font/open_sans</item>
+
         <item name="android:background">?attr/colorOnPrimary</item>
         <item name="android:textColorPrimary">?attr/alertTitle</item>
 
