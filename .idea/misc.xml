@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/DowiezPl_Chat/app/src/main/res/drawable/ic_baseline_logout_24.xml" value="0.37864583333333335" />
+        <entry key="..\:/DowiezPl_Chat/app/src/main/res/drawable/ic_conversation.xml" value="0.37864583333333335" />
+        <entry key="..\:/DowiezPl_Chat/app/src/main/res/drawable/ic_group.xml" value="0.37864583333333335" />
+        <entry key="..\:/DowiezPl_Chat/app/src/main/res/drawable/ic_person.xml" value="0.37864583333333335" />
         <entry key="..\:/DowiezPl_Chat/app/src/main/res/drawable/icon_background.xml" value="0.37864583333333335" />
         <entry key="..\:/DowiezPl_Chat/app/src/main/res/drawable/login_button.xml" value="0.37864583333333335" />
         <entry key="..\:/DowiezPl_Chat/app/src/main/res/drawable/logout_button_bg.xml" value="0.37864583333333335" />

@@ -37,7 +37,7 @@ interface ConversationDao {
     fun getSlow(conversationId: String): ConversationWithAccounts
 
     @Query("SELECT * FROM Conversation WHERE conversationId = :conversationId")
-    fun getSingle(conversationId: String): Conversation
+    fun getSingle(conversationId: String): Conversation?
 
     @Delete
     fun delete(conversation: Conversation)

@@ -21,4 +21,7 @@ interface MessageDao {
     @Transaction
     @Query("SELECT * FROM Message ORDER BY sendDate ASC")
     fun getAll(): Flow<List<Message>>
+
+    @Query("DELETE FROM Message WHERE conversationId = :conversationId")
+    fun removeFromConv(conversationId: String)
 }

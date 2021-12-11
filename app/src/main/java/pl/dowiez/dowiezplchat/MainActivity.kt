@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.android.volley.VolleyError
+import pl.dowiez.dowiezplchat.data.ChatDatabase
 import pl.dowiez.dowiezplchat.fragments.login.LoginFragment
 import pl.dowiez.dowiezplchat.databinding.ActivityMainBinding
 import pl.dowiez.dowiezplchat.fragments.chat.ChatFragment
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                         Log.i("MainActivity", "Token renewed successfully")
 
                         val con = intent.getStringExtra(INTENT_CONVERSATION_ID_KEY)
-                        if (con != null) {
+                        if (con != null && ChatDatabase.instance!!.conversationDao().getSingle(con) != null) {
                             loadFragment(ChatFragment.newInstance(con))
                         } else {
                             loadFragment(ConversationFragment())

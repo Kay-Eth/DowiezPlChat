@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Dowiez.pl Chat</string>
-    <string name="channel_name">Dowiez.pl Chat</string>
-    <string name="channel_description">Dowiez.pl Chat Service channel</string>
+    <string name="channel_messages_name">Dowiez.pl Chat Messages</string>
+    <string name="channel_messages_description">Dowiez.pl Chat Service Messages channel</string>
+    <string name="channel_conversations_name">Dowiez.pl Chat Conversations</string>
+    <string name="channel_conversations_description">Dowiez.pl Chat Service Conversations channel</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="logout_ask">Na pewno chcesz się wylogować?</string>
