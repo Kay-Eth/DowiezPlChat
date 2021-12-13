@@ -189,6 +189,7 @@ class ConversationFragment : Fragment(), ConversationAdapter.IOnConversationClic
                 setPositiveButton(R.string.logout_yes,
                     DialogInterface.OnClickListener { _, _ ->
                         UserHelper.logout(requireContext())
+                        MainActivity.getService()?.endHubConnection()
                         (requireActivity() as MainActivity).replaceFragment(LoginFragment())
                 })
                 setNegativeButton(R.string.logout_no,

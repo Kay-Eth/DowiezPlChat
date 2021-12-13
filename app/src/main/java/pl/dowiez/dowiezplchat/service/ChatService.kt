@@ -145,6 +145,10 @@ class ChatService : Service() {
         startConnection()
     }
 
+    fun endHubConnection() {
+        hubConnection!!.stop()
+    }
+
     private fun startConnection() {
         hubConnection!!.start().subscribe(object : CompletableObserver {
             override fun onSubscribe(d: Disposable) {
@@ -196,6 +200,7 @@ class ChatService : Service() {
         Log.i("ChatService", "Account $accountId joining $conversationId, ")
         ApiHelper.getAccountInfo(applicationContext, accountId, object : IGetAccountInfoCallback {
             override fun onSuccess(account: Account) {
+                Log.i("ChatService", "Got account info: ${account.accountId}")
                 ChatDatabase.instance!!.accountDao().insert(account)
             }
 
